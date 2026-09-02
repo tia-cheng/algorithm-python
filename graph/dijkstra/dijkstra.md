@@ -1,9 +1,15 @@
-# Dijkstra 单源最短路径
+# Dijkstra
+
+## 题眼
+* 计算从单一源点到其他所有节点的最短路径
+* 有权重，而且权重>=0
+* 求min time, cost
+* 唯一的明确起点：“从node K发出信号”、“从src到dst”、“从网格左上角 (0,0) 走到右下角”
 
 ## 思路
 * **本质:** 带有优先队列 (Priority Queue) 的 BFS。每次都从当前未访问的节点中，贪心地挑选距离起点“最近”的节点进行扩展。
 * **松弛 (Relaxation):** 通过中转节点寻找更短的路径。如果 `dist[起点 -> 中转节点] + weight(中转节点 -> 目标节点) < dist[起点 -> 目标节点]`，则更新已知最短距离。
-* **限制:** 图中**不能包含负权边**。因为 Dijkstra 基于贪心策略，一旦一个节点出堆，其最短路径就被认为已经收敛并确定。
+* **限制:** **不能有负权**。因为 Dijkstra 基于贪心策略，一旦一个节点出堆，其最短路径就被认为已经收敛并确定。
 
 ## 模板
 
@@ -12,15 +18,14 @@ from collections import defaultdict
 import heapq
 
 def dijkstra(n: int, edges: list[list[int]], start: int) -> dict:
-    # 1. 构建邻接表 (Adjacency List)
-    adj = {i: [] for i in range(n)}
+    # 1. Adjacency List
+    adj = defaultdict(list)
     for u, v, w in edges:
         adj[u].append((v, w))
-        # graph[v].append((u, w))  # 若为undirected则两边都要加进去
+        adj[v].append((u, w))
 
-    # 2. 初始化距离表与优先队列
+    # 2. 初始化距离表与pq
     dist = [float('inf')] * n
-    # or: dist = {i: float('inf') for i in range(n)}
     dist[start] = 0
 
     pq = [(0, start)]
@@ -43,3 +48,13 @@ def dijkstra(n: int, edges: list[list[int]], start: int) -> dict:
                 heapq.heappush(pq, (new_d, nei))
 
     return dist[end_node]
+```
+
+## TC & SC
+* $O((V + E) \log E)$ : logE: heappop, heappush
+
+* $O(V + E)$ : adj: V+E. heap: E
+
+# 带有额外限制的Dijkstra
+## 题眼
+* 加了限制条件: “最多只能经过 K 个 stops”，“最多可以消除 k 个障碍物”
