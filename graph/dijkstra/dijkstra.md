@@ -9,7 +9,7 @@
 ## 思路
 * **本质:** 带有Priority Queue的 BFS。每次都从当前未访问的节点中，贪心地挑选距离起点“最近”的节点进行扩展。
 * **Relaxation:** 通过中转节点寻找更短的路径。如果 `dist[起点 -> 中转节点] + weight(中转节点 -> 目标节点) < dist[起点 -> 目标节点]`，则更新已知最短距离。
-* **限制:** **不能有负权**。因为 Dijkstra 基于贪心策略，一旦一个节点出堆，其最短路径就被认为已经收敛并确定。
+* **限制:** **权重不是负数**。因为 Dijkstra 基于贪心策略，一旦一个节点出堆，其最短路径就被认为已经收敛并确定。
 
 ## 模板
 
@@ -60,3 +60,4 @@ def dijkstra(n: int, edges: list[list[int]], start: int) -> dict:
 * 加了限制条件: “最多只能经过 K 个 stops”，“最多可以消除 k 个障碍物”
 * 限制条件(stops)做 Array, 优化目标(cost)做 Heap Sort Key
 * Array只起到一个剪枝作用
+* min_stops 放在 for loop外面
